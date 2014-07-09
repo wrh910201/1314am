@@ -1,4 +1,5 @@
 <?php
+
 	require 'medoo.php';
 	
 	$config = array(
@@ -6,7 +7,7 @@
 		'database_name' => '1314am',
 		'server' => 'localhost',
 		'username' => 'root',
-		'password' => '',
+		'password' => '111111',
 			
 	);
 	
