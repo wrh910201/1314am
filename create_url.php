@@ -13,8 +13,6 @@
 	
 		if( $_POST ) {
 		
-			echo "create url<br />";
-			
 			$new_url = isset( $_POST['new_url'] ) ? $_POST['new_url'] : '';
 			
 			$jmpUrl = $_SERVER['HTTP_REFERER'];
@@ -52,6 +50,8 @@
 <meta http-equiv="refresh" content="3; url=<?php echo $jmpUrl;?>" />
 </head>
 <body>
-<p><?php echo $message;?>,3s后跳转到...</p>
+<div style="text-align:center;padding-top:100px">
+<p><?php echo $message;?>,3s后跳转到...<a href="<?php echo $jmpUrl;?>">这里</a></p>
+</div>
 </body>
 </html>

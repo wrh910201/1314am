@@ -28,9 +28,11 @@
 		}
 	}
 ?>
-
+<body>
+<div style="text-align:center;padding-top:100px">
 <form action="update_url.php?id=<?php echo $id;?>" method="post" >
-	url:<input type="text" name="new_url" value="<?php echo isset($urlInfo['url'])?$urlInfo['url']:'';?>" />&nbsp;&nbsp;
+	URL:<input type="text" name="new_url" value="<?php echo isset($urlInfo['url'])?$urlInfo['url']:'';?>" style="width:40%"/>&nbsp;&nbsp;
 	<input type="submit" value="更新" />
 </form>
-
+</div>
+</body>
