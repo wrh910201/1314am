@@ -99,7 +99,8 @@ function showPanel(url_id) {
 
 <?php 
 	if( $urlList ) {
-
+		$tmp = $_SERVER['SCRIPT_NAME'];
+		$tmp = str_replace('url_list.php', '', $tmp);
 		foreach ($urlList as $k => $v) {
 
 			echo "
@@ -107,7 +108,7 @@ function showPanel(url_id) {
 <td style=\"text-align:center\">".$v['url_id']."</td>
 <td id=\"".$v['url_id']."\">".$v['url']."</td>
 <td style=\"text-align:center\">
-<a href=\"index.php?id=".$v['url_id']."\">预览</a>&nbsp;&nbsp;
+<a href=\"".$tmp."?id=".$v['url_id']."\">预览</a>&nbsp;&nbsp;
 <a href=\"javascript:void(0)\" onclick=\"showPanel(".$v['url_id'].");\">编辑</a>&nbsp;&nbsp;
 <a href=\"delete_url.php?id=".$v['url_id']."\">删除</a>				
 </td>
