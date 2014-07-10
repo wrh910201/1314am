@@ -1,5 +1,6 @@
 <?php
 	@session_start();
+	header("Content-Type:text/html;Charset=utf-8");
 	require 'config.db.php';
 	
 	if( isset($_SESSION['user_id']) ) {
@@ -11,7 +12,7 @@
 	
 	if( $_POST ) {
 		
-		echo "login<br />";
+		//echo "login<br />";
 		
 		$user_name = isset($_POST['user_name']) ? $_POST['user_name'] : '';
 		

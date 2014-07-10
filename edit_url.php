@@ -1,6 +1,7 @@
 <?php
-
 	@session_start();
+	header("Content-Type:text/html;Charset=utf-8");
+	
 	require 'config.db.php';
 	
 	if( !isset($_SESSION['user_id']) ) {
