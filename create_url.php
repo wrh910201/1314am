@@ -16,6 +16,8 @@
 		if( $_POST ) {
 		
 			$new_url = isset( $_POST['new_url'] ) ? $_POST['new_url'] : '';
+
+            $alia = isset( $_POST['alia'] ) ? $_POST['alia'] : '';
 			
 			$jmpUrl = $_SERVER['HTTP_REFERER'];
 			
@@ -23,7 +25,7 @@
 				
 				$table = 'url';
 				
-				$datas = array('url' => $new_url);
+				$datas = array('url' => $new_url, 'alia' => $alia);
 				
 				$result = $db->insert($table, $datas);
 				

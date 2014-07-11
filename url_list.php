@@ -13,23 +13,11 @@
 		
 	} else {
 		
-		$page = isset($_GET['page']) ? $_GET['page'] : 1;
-		
-		$count = 10;
-		
 		$table = 'url';
 		
 		$join = "*";
 		
-		$total = $db->count($table);
-		
-		$pageNum = intval(ceil($total / $count));
-		
-		$page = $page > $pageNum ? $pageNum : $page;
-		
-		$offset = ($page - 1) * $count;
-		
-		$where = array("ORDER" => 'url_id ASC', 'LIMIT' => array($offset, $count));
+		$where = array("ORDER" => 'url_id DESC', 'LIMIT' => array(0, 1));
 		
 		$urlList = $db->select($table, $join, $where);
 		
@@ -49,14 +37,23 @@ function closePanel() {
 }
 
 
-function showPanel(url_id) {
-	var url_obj = document.getElementById(url_id);
-	var edit_url_obj = document.getElementById('edit_url');
-	var edit_form_obj = document.getElementById('edit_form');
+function showPanel(id) {
+    var url_id = 'url_' + id;
+    var alia_id = 'alia_' + id;
 
-	edit_url_obj.value = url_obj.textContent;
+	var url_obj = document.getElementById(url_id);
+    var alia_obj = document.getElementById(alia_id);
+	var edit_url_obj = document.getElementById('edit_url');
+    var edit_alia_obj = document.getElementById('edit_alia');
+    var edit_form_obj = document.getElementById('edit_form');
+    
+
+
+    edit_url_obj.value = url_obj.textContent;
+    arr  = alia_obj.textContent.split('/');
+    edit_alia_obj.value = arr[arr.length - 1];
 	edit_form_obj.action = "update_url.php?id=";
-	edit_form_obj.action += url_id;
+	edit_form_obj.action += id;
 
 	document.getElementById('light').style.display='block';
 	document.getElementById('fade').style.display='block';
@@ -110,6 +107,7 @@ a.page:hover {
 <tr>
 <th>ID</th>
 <th>URL</th>
+<th>别名</th>
 <th>操作</th>
 </tr>
 
@@ -122,7 +120,8 @@ a.page:hover {
 			echo "
 <tr style=\"text-align:center\">
 <td style=\"text-align:center\">".$v['url_id']."</td>
-<td id=\"".$v['url_id']."\">".$v['url']."</td>
+<td id=\"url_".$v['url_id']."\">".$v['url']."</td>
+<td id=\"alia_".$v['url_id']."\" style=\"text-align:center\">http://".$_SERVER['HTTP_HOST']."/".$v['alia']."</td>
 <td style=\"text-align:center\" width=\"25%\">
 <a href=\"".$tmp."?id=".$v['url_id']."\">预览</a>&nbsp;&nbsp;
 <a href=\"javascript:void(0)\" onclick=\"showPanel(".$v['url_id'].");\">编辑</a>&nbsp;&nbsp;
@@ -134,40 +133,10 @@ a.page:hover {
 ?>
 
 </table><br />
-<?php 
-	
-	
-	
-	if( $page > 1 ) {
-		$tmp = $page - 1;
-		echo '<a class="page" href="?page=1">&lt;&lt;</a>&nbsp&nbsp;';
-		echo '<a class="page" href="?page='.$tmp.'">&lt;</a>&nbsp&nbsp;';
-	}
-	if( $page > 4 ) {
-		echo '...';
-	}
-	for ($i = 1; $i < $page + 3 && $i <= $pageNum; $i++) {
-		if( abs($page - $i) < 3 ) {
-			if( $i == $page ) {
-				echo '<b>'.$i.'</b>&nbsp;&nbsp;';
-			} else {
-				echo '<a class="page" href="?page='.$i.'">'.$i.'</a>&nbsp&nbsp;';
-			}
-		}
-	}
-	if( ($pageNum - $page) > 3) {
-		echo '...';
-	}
-	
-	if( $page < $pageNum ) {
-		$tmp = $page + 1;
-		echo '<a class="page" href="?page='.$tmp.'">&gt;</a>&nbsp&nbsp;';
-		echo '<a class="page" href="?page='.$pageNum.'">&gt;&gt;</a>&nbsp&nbsp;<br />';
-	}
-?>
 <div style="margin-top:50px;">
 <form action="create_url.php" method="post" align="center">
-新URL:&nbsp;&nbsp;<input type="text" name="new_url" style="width:30%"/>&nbsp;&nbsp;
+新URL:&nbsp;&nbsp;<input type="text" name="new_url" style="width:30%"/>&nbsp;&nbsp;<br /><br />
+别名：&nbsp;&nbsp;http://<?php echo $_SERVER['HTTP_HOST'];?>/<input type="text" name="alia" />&nbsp;&nbsp;
 <input type="submit" value="添加" text-align="center"/>
 </form>
 </div>
@@ -175,7 +144,8 @@ a.page:hover {
 </div>
 <div id="light" class="white_content">
 <form id="edit_form" action="" method="post" align="center" style="padding-top:30px">
-	URL:&nbsp;&nbsp;<input type="text" name="new_url" id="edit_url" style="width:40%"/><br /><br /><br />
+	URL:&nbsp;&nbsp;<input type="text" name="new_url" id="edit_url" style="width:40%"/><br /><br />
+    别名：&nbsp;&nbsp;http://<?php echo $_SERVER['HTTP_HOST'];?>/<input type="text" name="alia" id="edit_alia" />&nbsp;&nbsp;<br /><br /><br />
 	<input type="submit" value="更新" />&nbsp;&nbsp;
 	<input type="button" value="取消" onclick="closePanel()"/>
 </form>

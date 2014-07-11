@@ -33,8 +33,10 @@
 				if( $urlInfo ) {
 					
 					$new_url = isset( $_POST['new_url'] ) ? $_POST['new_url'] : '';
+
+                    $alia = isset( $_POST['alia']) ? $_POST['alia'] : '';
 					
-					$data = array('url' => $new_url);
+					$data = array('url' => $new_url, 'alia' => $alia);
 					
 					$result = $db->update($table, $data, $where);
 						

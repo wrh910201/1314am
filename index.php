@@ -1,43 +1,57 @@
 <?php
 	@session_start();
 	require 'config.db.php';
-	
-	if( !isset($_SESSION['user_id']) ) {
-	
-		echo '<script type="text/javascript">
-					alert("请先登陆");
-					window.location.href="admin.php";
-				</script>';
-	
-	} else {
+
+    $uri = $_SERVER['REQUEST_URI'];
+
+    echo $uri."<br />";
+
+    $pattern = "#id=[0-9]{1,}#";
+
+    if( $uri == '/' ||  preg_match($pattern, $uri) ) {
+        
+        $id = isset($_GET['id']) ? $_GET['id'] : '';
 		
-		$id = isset($_GET['id']) ? $_GET['id'] : '';
+	    $table = 'url';
 		
-		$table = 'url';
+	    $columns = '*';
 		
-		$columns = '*';
+	    if( '' != $id ) {
+			
+		    $id = intval($id);
+			
+		    $where = array('url_id' => $id);
+			
+		    $urlInfo = $db->get($table, $columns, $where);
+			
+	    } else {
+			
+	    	$where = array('ORDER' => 'url_id DESC');
+			
+		    $urlInfo = $db->get($table, $columns, $where);
+			
+	    }
 		
-		if( '' != $id ) {
+
+     } else {
+
+         $table = 'url';
+
+         $columns = '*';
+
+         $alia = str_replace("/", '', $uri);
+
+         $where = array('alia' => $alia, 'ORDER' => 'url_id DESC');
+
+         $urlInfo = $db->get($table, $columns, $where);
+
+         var_dump($urlInfo);
+
+     }
+
+	if( $urlInfo ) {
 			
-			$id = intval($id);
+        header("location:".$urlInfo['url']);
 			
-			$where = array('url_id' => $id);
-			
-			$urlInfo = $db->get($table, $columns, $where);
-			
-		} else {
-			
-			$where = array('ORDER' => 'url_id DESC');
-			
-			$urlInfo = $db->get($table, $columns, $where);
-			
-		}
-		
-		if( $urlInfo ) {
-			
-			header("location:".$urlInfo['url']);
-			
-		}
-		
-		
-	}
+    }
+
