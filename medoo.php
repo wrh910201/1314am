@@ -122,7 +122,11 @@ class medoo
 			}
 		}
 		catch (PDOException $e) {
-			throw new Exception($e->getMessage());
+			try {
+				throw new Exception($e->getMessage());
+			} catch (Exception $e1) {
+				die("database error,please check your configure");
+			}
 		}
 	}
 

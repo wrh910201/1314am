@@ -7,7 +7,7 @@
 		'database_name' => '1314am',
 		'server' => 'localhost',
 		'username' => 'root',
-		'password' => '111111',
+		'password' => '',
 			
 	);
 	
