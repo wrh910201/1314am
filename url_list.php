@@ -12,12 +12,24 @@
 			</script>';
 		
 	} else {
-		
+
+        $page = isset( $_GET['page']) ? $_GET['page'] : 1;
+
+        $count = 10;
+
 		$table = 'url';
+
+        $total = $db->count($table);
+
+        $pageNum = intval(ceil($total / $count));
+
+        $page = ($page > $pageNum) ? $pageNum : $page;
+
+        $offset = ($page - 1) * $count;
 		
 		$join = "*";
 		
-		$where = array("ORDER" => 'url_id DESC', 'LIMIT' => array(0, 1));
+		$where = array("ORDER" => 'url_id DESC', 'LIMIT' => array($offset, $count));
 		
 		$urlList = $db->select($table, $join, $where);
 		
@@ -105,9 +117,8 @@ a.page:hover {
 <div align="center" style="padding-top:100px;" >
 <table width="60%" border="1" cellpadding="3" cellspacing="1" align="center" style="border-collapse: collapse;">
 <tr>
-<th>ID</th>
-<th>URL</th>
 <th>别名</th>
+<th>URL</th>
 <th>操作</th>
 </tr>
 
@@ -119,9 +130,8 @@ a.page:hover {
 
 			echo "
 <tr style=\"text-align:center\">
-<td style=\"text-align:center\">".$v['url_id']."</td>
-<td id=\"url_".$v['url_id']."\">".$v['url']."</td>
 <td id=\"alia_".$v['url_id']."\" style=\"text-align:center\">http://".$_SERVER['HTTP_HOST']."/".$v['alia']."</td>
+<td id=\"url_".$v['url_id']."\">".$v['url']."</td>
 <td style=\"text-align:center\" width=\"25%\">
 <a href=\"".$tmp."?id=".$v['url_id']."\">预览</a>&nbsp;&nbsp;
 <a href=\"javascript:void(0)\" onclick=\"showPanel(".$v['url_id'].");\">编辑</a>&nbsp;&nbsp;
@@ -133,6 +143,41 @@ a.page:hover {
 ?>
 
 </table><br />
+<?php 
+	
+    if( $total == 0 ) {
+        echo '当前没有记录<br />';
+    } else {
+        echo '共&nbsp;'.$total.'&nbsp;条记录&nbsp;&nbsp;&nbsp;';
+    }   
+	
+	if( $page > 1 ) {
+		$tmp = $page - 1;
+		echo '<a class="page" href="?page=1">&lt;&lt;</a>&nbsp&nbsp;';
+		echo '<a class="page" href="?page='.$tmp.'">&lt;</a>&nbsp&nbsp;';
+	}
+	if( $page > 4 ) {
+		echo '...';
+	}
+	for ($i = 1; $i < $page + 3 && $i <= $pageNum; $i++) {
+		if( abs($page - $i) < 3 ) {
+			if( $i == $page ) {
+				echo '<b>'.$i.'</b>&nbsp;&nbsp;';
+			} else {
+				echo '<a class="page" href="?page='.$i.'">'.$i.'</a>&nbsp&nbsp;';
+			}
+		}
+	}
+	if( ($pageNum - $page) > 3) {
+		echo '...';
+	}
+	
+	if( $page < $pageNum ) {
+		$tmp = $page + 1;
+		echo '<a class="page" href="?page='.$tmp.'">&gt;</a>&nbsp&nbsp;';
+		echo '<a class="page" href="?page='.$pageNum.'">&gt;&gt;</a>&nbsp&nbsp;<br />';
+	}
+?>
 <div style="margin-top:50px;">
 <form action="create_url.php" method="post" align="center">
 新URL:&nbsp;&nbsp;<input type="text" name="new_url" style="width:30%"/>&nbsp;&nbsp;<br /><br />
